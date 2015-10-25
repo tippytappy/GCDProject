@@ -50,47 +50,92 @@ Mag          | Magnitude
 
 #### Tidy Data Set Fields
 
-```{r, echo = FALSE}
-  
-setwd("~/")
 
-# Download the data
-download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", "~/HARData.zip")
-
-# Unzip
-unzip("~/HARData.zip")
-
-# Read the data
-features <- read.table("~/UCI HAR Dataset/features.txt")             # feature list
-
-# Make a vector of feature names as characters with which to rename the feature columns
-featurenames <- as.character(features[, 2])
-
-# Find the mean and std columns
-datacols <- grep("mean|std", featurenames, ignore.case = TRUE)
-colnames <- featurenames[datacols]
-
-# Rename the data column names to be more easily readable
-colnames <- gsub("\\-","", colnames)
-colnames <- gsub("\\(","", colnames)
-colnames <- gsub("\\)","", colnames)
-colnames <- gsub("mean","Mean", colnames)
-colnames <- gsub("std","StdDev", colnames)
-colnames <- gsub("Acc","Accelerometer", colnames)
-colnames <- gsub("Gyro","Gyroscope", colnames)
-colnames <- gsub("angle","Angle", colnames)
-colnames <- gsub("fBody","FrequencyBody", colnames)
-colnames <- gsub("tBody","TimeBody", colnames)
-colnames <- gsub("tGravity","TimeGravity", colnames)
-colnames <- gsub("gravity","Gravity", colnames)
-colnames <- gsub("Mag","Magnitude", colnames)
-colnames <- gsub("BodyBody","Body", colnames)
-
-meanCols <- paste0("Mean", colnames)
-subact <- c("Subject", "Activity")
-columns <- c(subact, meanCols)
-
-columns
-
-```
-
+##  [1] "Subject"                                            
+##  [2] "Activity"                                           
+##  [3] "MeanTimeBodyAccelerometerMeanX"                     
+##  [4] "MeanTimeBodyAccelerometerMeanY"                     
+##  [5] "MeanTimeBodyAccelerometerMeanZ"                     
+##  [6] "MeanTimeBodyAccelerometerStdDevX"                   
+##  [7] "MeanTimeBodyAccelerometerStdDevY"                   
+##  [8] "MeanTimeBodyAccelerometerStdDevZ"                   
+##  [9] "MeanTimeGravityAccelerometerMeanX"                  
+## [10] "MeanTimeGravityAccelerometerMeanY"                  
+## [11] "MeanTimeGravityAccelerometerMeanZ"                  
+## [12] "MeanTimeGravityAccelerometerStdDevX"                
+## [13] "MeanTimeGravityAccelerometerStdDevY"                
+## [14] "MeanTimeGravityAccelerometerStdDevZ"                
+## [15] "MeanTimeBodyAccelerometerJerkMeanX"                 
+## [16] "MeanTimeBodyAccelerometerJerkMeanY"                 
+## [17] "MeanTimeBodyAccelerometerJerkMeanZ"                 
+## [18] "MeanTimeBodyAccelerometerJerkStdDevX"               
+## [19] "MeanTimeBodyAccelerometerJerkStdDevY"               
+## [20] "MeanTimeBodyAccelerometerJerkStdDevZ"               
+## [21] "MeanTimeBodyGyroscopeMeanX"                         
+## [22] "MeanTimeBodyGyroscopeMeanY"                         
+## [23] "MeanTimeBodyGyroscopeMeanZ"                         
+## [24] "MeanTimeBodyGyroscopeStdDevX"                       
+## [25] "MeanTimeBodyGyroscopeStdDevY"                       
+## [26] "MeanTimeBodyGyroscopeStdDevZ"                       
+## [27] "MeanTimeBodyGyroscopeJerkMeanX"                     
+## [28] "MeanTimeBodyGyroscopeJerkMeanY"                     
+## [29] "MeanTimeBodyGyroscopeJerkMeanZ"                     
+## [30] "MeanTimeBodyGyroscopeJerkStdDevX"                   
+## [31] "MeanTimeBodyGyroscopeJerkStdDevY"                   
+## [32] "MeanTimeBodyGyroscopeJerkStdDevZ"                   
+## [33] "MeanTimeBodyAccelerometerMagnitudeMean"             
+## [34] "MeanTimeBodyAccelerometerMagnitudeStdDev"           
+## [35] "MeanTimeGravityAccelerometerMagnitudeMean"          
+## [36] "MeanTimeGravityAccelerometerMagnitudeStdDev"        
+## [37] "MeanTimeBodyAccelerometerJerkMagnitudeMean"         
+## [38] "MeanTimeBodyAccelerometerJerkMagnitudeStdDev"       
+## [39] "MeanTimeBodyGyroscopeMagnitudeMean"                 
+## [40] "MeanTimeBodyGyroscopeMagnitudeStdDev"               
+## [41] "MeanTimeBodyGyroscopeJerkMagnitudeMean"             
+## [42] "MeanTimeBodyGyroscopeJerkMagnitudeStdDev"           
+## [43] "MeanFrequencyBodyAccelerometerMeanX"                
+## [44] "MeanFrequencyBodyAccelerometerMeanY"                
+## [45] "MeanFrequencyBodyAccelerometerMeanZ"                
+## [46] "MeanFrequencyBodyAccelerometerStdDevX"              
+## [47] "MeanFrequencyBodyAccelerometerStdDevY"              
+## [48] "MeanFrequencyBodyAccelerometerStdDevZ"              
+## [49] "MeanFrequencyBodyAccelerometerMeanFreqX"            
+## [50] "MeanFrequencyBodyAccelerometerMeanFreqY"            
+## [51] "MeanFrequencyBodyAccelerometerMeanFreqZ"            
+## [52] "MeanFrequencyBodyAccelerometerJerkMeanX"            
+## [53] "MeanFrequencyBodyAccelerometerJerkMeanY"            
+## [54] "MeanFrequencyBodyAccelerometerJerkMeanZ"            
+## [55] "MeanFrequencyBodyAccelerometerJerkStdDevX"          
+## [56] "MeanFrequencyBodyAccelerometerJerkStdDevY"          
+## [57] "MeanFrequencyBodyAccelerometerJerkStdDevZ"          
+## [58] "MeanFrequencyBodyAccelerometerJerkMeanFreqX"        
+## [59] "MeanFrequencyBodyAccelerometerJerkMeanFreqY"        
+## [60] "MeanFrequencyBodyAccelerometerJerkMeanFreqZ"        
+## [61] "MeanFrequencyBodyGyroscopeMeanX"                    
+## [62] "MeanFrequencyBodyGyroscopeMeanY"                    
+## [63] "MeanFrequencyBodyGyroscopeMeanZ"                    
+## [64] "MeanFrequencyBodyGyroscopeStdDevX"                  
+## [65] "MeanFrequencyBodyGyroscopeStdDevY"                  
+## [66] "MeanFrequencyBodyGyroscopeStdDevZ"                  
+## [67] "MeanFrequencyBodyGyroscopeMeanFreqX"                
+## [68] "MeanFrequencyBodyGyroscopeMeanFreqY"                
+## [69] "MeanFrequencyBodyGyroscopeMeanFreqZ"                
+## [70] "MeanFrequencyBodyAccelerometerMagnitudeMean"        
+## [71] "MeanFrequencyBodyAccelerometerMagnitudeStdDev"      
+## [72] "MeanFrequencyBodyAccelerometerMagnitudeMeanFreq"    
+## [73] "MeanFrequencyBodyAccelerometerJerkMagnitudeMean"    
+## [74] "MeanFrequencyBodyAccelerometerJerkMagnitudeStdDev"  
+## [75] "MeanFrequencyBodyAccelerometerJerkMagnitudeMeanFreq"
+## [76] "MeanFrequencyBodyGyroscopeMagnitudeMean"            
+## [77] "MeanFrequencyBodyGyroscopeMagnitudeStdDev"          
+## [78] "MeanFrequencyBodyGyroscopeMagnitudeMeanFreq"        
+## [79] "MeanFrequencyBodyGyroscopeJerkMagnitudeMean"        
+## [80] "MeanFrequencyBodyGyroscopeJerkMagnitudeStdDev"      
+## [81] "MeanFrequencyBodyGyroscopeJerkMagnitudeMeanFreq"    
+## [82] "MeanAngleTimeBodyAccelerometerMean,Gravity"         
+## [83] "MeanAngleTimeBodyAccelerometerJerkMean,GravityMean" 
+## [84] "MeanAngleTimeBodyGyroscopeMean,GravityMean"         
+## [85] "MeanAngleTimeBodyGyroscopeJerkMean,GravityMean"     
+## [86] "MeanAngleX,GravityMean"                             
+## [87] "MeanAngleY,GravityMean"                             
+## [88] "MeanAngleZ,GravityMean"
