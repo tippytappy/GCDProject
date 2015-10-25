@@ -1,0 +1,96 @@
+---
+title: "Human Activity Recognition CodeBook"
+
+---
+***
+#### Data Transformations
+
+All transormations were performed by the script run_analysis.R.
+
+The source material was transformed as follows:
+
+1. Test data files were appended to their training equivalents
+2. The combined test and training data frames were bound to make one data frame
+3. The feature list was made more descriptive (see below) and added to the data frame as column names
+4. Activity codes were replaced by their labels
+5. The mean of each feature per Subject per Activity
+
+
+The file "HARMeans.txt" was produced using the following code:
+
+```{r, eval = FALSE}
+write.table(means, "~/HARMeans.txt", row.name = FALSE)
+```
+
+To read the file use read.table()
+
+```{r, eval = FALSE}
+read.table("~/HARMeans.txt", header = TRUE)
+```
+
+The file contains 180 observations of 86 mean and standard deviation variables, with 6 mean values per the 30 subject. It is in the wide format, maintaining the order of the columns as found in the source file.
+
+***
+
+#### Feature List Name Cleanse
+
+To make the feature names easier to interpret some of the generic terms were replaced and the text was formatted in camel case to make it easier to read.
+
+Feature text | Replacement
+------------ | -----------
+mean         | Mean
+std          | StdDev
+Acc          | Accelerometer
+Gyro         | Gyroscope
+Mag          | Magnitude
+-            | *null*
+()           | *null*
+
+***
+
+#### Tidy Data Set Fields
+
+```{r, echo = FALSE}
+  
+setwd("~/")
+
+# Download the data
+download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", "~/HARData.zip")
+
+# Unzip
+unzip("~/HARData.zip")
+
+# Read the data
+features <- read.table("~/UCI HAR Dataset/features.txt")             # feature list
+
+# Make a vector of feature names as characters with which to rename the feature columns
+featurenames <- as.character(features[, 2])
+
+# Find the mean and std columns
+datacols <- grep("mean|std", featurenames, ignore.case = TRUE)
+colnames <- featurenames[datacols]
+
+# Rename the data column names to be more easily readable
+colnames <- gsub("\\-","", colnames)
+colnames <- gsub("\\(","", colnames)
+colnames <- gsub("\\)","", colnames)
+colnames <- gsub("mean","Mean", colnames)
+colnames <- gsub("std","StdDev", colnames)
+colnames <- gsub("Acc","Accelerometer", colnames)
+colnames <- gsub("Gyro","Gyroscope", colnames)
+colnames <- gsub("angle","Angle", colnames)
+colnames <- gsub("fBody","FrequencyBody", colnames)
+colnames <- gsub("tBody","TimeBody", colnames)
+colnames <- gsub("tGravity","TimeGravity", colnames)
+colnames <- gsub("gravity","Gravity", colnames)
+colnames <- gsub("Mag","Magnitude", colnames)
+colnames <- gsub("BodyBody","Body", colnames)
+
+meanCols <- paste0("Mean", colnames)
+subact <- c("Subject", "Activity")
+columns <- c(subact, meanCols)
+
+columns
+
+```
+
